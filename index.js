@@ -1,13 +1,7 @@
-const https = require('https');
-const fs = require('fs');
 const WebSocket = require('ws');
 
-const server = https.createServer({
-    cert: fs.readFileSync('./cert1.pem'),
-    key: fs.readFileSync('./privkey1.pem')
-});
-
-const wss = new WebSocket.Server({ server });
+const port = 3001;
+const wss = new WebSocket.Server({port}, console.log('server is listening on ', port));
 
 const clients = [];
 
@@ -34,8 +28,3 @@ wss.on('connection', function connection(ws) {
 setInterval(() => {
     sendToAll('Hello, clients!');
 }, 1000);
-
-const port = 443;
-server.listen(port, () => {
-    console.log('Server started on port ', port);
-});
