@@ -35,7 +35,7 @@ setInterval(() => {
     sendToAll('Hello, clients!');
 }, 1000);
 
-const port = 3001;
+const port = 443;
 server.listen(port, () => {
     console.log('Server started on port ', port);
 });
