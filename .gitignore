@@ -1,0 +1,8 @@
+# project folder
+/node_modules/
+
+# ide folder
+.idea
+
+# package-lock.json
+package-lock.json
