@@ -1,6 +1,31 @@
 require('dotenv').config();
+const WebSocket = require('ws');
 const mqtt = require('mqtt');
 const {MongoClient} = require('mongodb');
+
+const port = 3001;
+const wss = new WebSocket.Server({port}, () => console.log('server is listening on ', port))
+const clients = [];
+
+function sendToAll(message) {
+    clients.forEach(client => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(message);
+        }
+    });
+}
+
+wss.on('connection', function connection(ws) {
+    clients.push(ws);
+
+    ws.on('message', function incoming(message) {
+        console.log('received: %s', message);
+    });
+
+    ws.on('close', function close() {
+        clients.splice(clients.indexOf(ws), 1);
+    });
+});
 
 const {
     MONGO_USER,
@@ -68,6 +93,7 @@ async function handleMessage(message) {
         const msg = JSON.parse(message.toString());
         await mongoCollection.insertOne({...msg, timestamp: getTime()});
         console.log("Inserted message into MongoDB:", msg);
+        sendToAll(JSON.stringify(msg))
     } catch (error) {
         console.error("Error handling MQTT message:", error);
     }
