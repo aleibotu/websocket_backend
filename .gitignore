@@ -4,5 +4,7 @@
 # ide folder
 .idea
 
+../../AppData/Roaming/JetBrains/WebStorm2022.2/scratches/test/.env
+
 # package-lock.json
 package-lock.json
